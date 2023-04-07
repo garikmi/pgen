@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <unistd.h>
+
+#define TESTING 0
 
 void write_part(char *str, int len, int uppercase);
 
@@ -16,15 +17,19 @@ void write_random_pin(char *buffer, int len);
 
 void print_commands();
 
-// int rand() { return 1000; }
+/* use for testing */
+#if TESTING
+int rand() { return 1000; }
+#endif
 
 /*       number of args                                       */
 /*             |                                              */
 /*             |  pointer to vector of pointers to args       */
 /*             |            |                                 */
 int main(int argc, const char **argv) {
+#if !TESTING
     srand(time(0));
-    char buffer[60];
+    char buffer[61]; /* max password length is 60 */
 
     if (argc > 1) {
         if (strcmp(argv[1], "word") == 0) {
@@ -63,10 +68,11 @@ int main(int argc, const char **argv) {
         pclose(pipe);
     }
     printf("\n");
+#endif
 
 /* Test write_standard_password */
 /* NOTE: - Set rand function to 1000. */
-#if 0
+#if TESTING
     char buffer[60]; /* allow variable length, but max is 60 */
 
     write_standard_password(buffer, 20, 3);
@@ -148,8 +154,6 @@ int main(int argc, const char **argv) {
 
 /* writes fake word password to buffer */
 void write_standard_password(char *buffer, int len, int pts) {
-    /* NOTE: - Buffer needs to be one bigger than length to hold NULL character.
-     */
     /* TODO: - Rewrite. */
     int chr_pt = (len - (pts - 1)) / pts;        /* find part length */
     int msng = len - (chr_pt * pts + (pts - 1)); /* find missing chars */
@@ -237,7 +241,7 @@ void write_part(char *buffer, int len, int uppercase) {
     }
     if ((len - 1) % 2 != 0)
         buffer[len - 2] = random_consonant(uppercase);
-    buffer[len - 1] = '\0';
+    buffer[len] = '\0';
 }
 
 /* print commands info */
