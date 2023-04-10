@@ -7,6 +7,11 @@
 
 #define TESTING 0
 
+/* use for testing */
+#if TESTING
+int rand() { return 1000; }
+#endif
+
 void write_part(char *str, int len, int uppercase);
 
 void write_standard_password(char *buffer, int len, int pts);
@@ -16,11 +21,6 @@ void write_random_password(char *buffer, int len);
 void write_random_pin(char *buffer, int len);
 
 void print_commands();
-
-/* use for testing */
-#if TESTING
-int rand() { return 1000; }
-#endif
 
 /*       number of args                                       */
 /*             |                                              */
@@ -73,6 +73,39 @@ int main(int argc, const char **argv) {
 /* Test write_standard_password */
 /* NOTE: - Set rand function to 1000. */
 #if TESTING
+    printf("-> TESTING write_part\n");
+    char part_buffer[7];
+
+    write_part(part_buffer, 1, 0);
+    printf("len 1: %s\n",
+           strcmp(part_buffer, "b") == 0 ? "ok" : "fail");
+
+    write_part(part_buffer, 2, 0);
+    printf("len 2: %s\n",
+           strcmp(part_buffer, "ba") == 0 ? "ok" : "fail");
+
+    write_part(part_buffer, 3, 0);
+    printf("len 3: %s\n",
+           strcmp(part_buffer, "bab") == 0 ? "ok" : "fail");
+
+    write_part(part_buffer, 4, 0);
+    printf("len 4: %s\n",
+           strcmp(part_buffer, "baba") == 0 ? "ok" : "fail");
+
+    write_part(part_buffer, 5, 0);
+    printf("len 5: %s\n",
+           strcmp(part_buffer, "babab") == 0 ? "ok" : "fail");
+
+    write_part(part_buffer, 6, 1);
+    printf("len 6: %s\n",
+           strcmp(part_buffer, "BABABA") == 0 ? "ok" : "fail");
+
+    write_part(part_buffer, 7, 1);
+    printf("len 7: %s\n",
+           strcmp(part_buffer, "BABABAB") == 0 ? "ok" : "fail");
+
+
+    printf("\n-> TESTING write_standard_password\n");
     char buffer[60]; /* allow variable length, but max is 60 */
 
     write_standard_password(buffer, 20, 3);
@@ -235,12 +268,12 @@ void write_random_pin(char *buffer, int len) {
 
 /* writes a non-existent word to buffer */
 void write_part(char *buffer, int len, int uppercase) {
-    for (int i = 0; i < (len - 2); i += 2) {
+    for (int i = 0; i < (len - 1); i += 2) {
         buffer[i] = random_consonant(uppercase);
         buffer[i + 1] = random_vowel(uppercase);
     }
-    if ((len - 1) % 2 != 0)
-        buffer[len - 2] = random_consonant(uppercase);
+    if (len % 2 != 0)
+        buffer[len - 1] = random_consonant(uppercase);
     buffer[len] = '\0';
 }
 
