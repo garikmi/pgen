@@ -61,9 +61,7 @@ int main(int argc, const char **argv) {
     FILE *pipe = popen("pbcopy", "w");
     if (pipe != NULL) {
         int err = fprintf(pipe, "%s", buffer);
-        if (err < 0)
-            printf(" [NOT COPIED]");
-        else
+        if (err >= 0)
             printf(" [COPIED]");
         pclose(pipe);
     }
