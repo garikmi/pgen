@@ -1,5 +1,5 @@
-#ifndef WORDS_H_INCLUDED
-#define WORDS_H_INCLUDED
+#ifndef WORDS_H_SENTRY
+#define WORDS_H_SENTRY
 
 char random_lowercase_letter();
 
