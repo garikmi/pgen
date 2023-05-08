@@ -5,9 +5,11 @@
 #include <string.h>
 #include <time.h>
 
-#define TESTING 0
-
 /* use for testing */
+#ifndef TESTING
+#define TESTING 0
+#endif
+
 #if TESTING
 int rand() { return 1000; }
 #endif
@@ -31,6 +33,7 @@ int main(int argc, const char **argv) {
     srand(time(0));
     char buffer[61]; /* max password length is 60 */
 
+    // parse arguments
     if (argc > 1) {
         if (strcmp(argv[1], "word") == 0) {
             write_standard_password(buffer, 20, 3);
@@ -55,22 +58,16 @@ int main(int argc, const char **argv) {
     } else {
         write_standard_password(buffer, 20, 3);
     }
-    printf("%s", buffer);
 
-    /* copy to clipboard using pbcopy */
-    FILE *pipe = popen("pbcopy", "w");
-    if (pipe != NULL) {
-        int err = fprintf(pipe, "%s", buffer);
-        if (err >= 0)
-            printf(" [COPIED]");
-        pclose(pipe);
-    }
-    printf("\n");
+    // print password
+    printf("%s\n", buffer);
 #endif
 
 /* Test write_standard_password */
 /* NOTE: - Set rand function to 1000. */
 #if TESTING
+    // do testing instead through file
+
     printf("-> TESTING write_part\n");
     char part_buffer[7];
 
@@ -111,7 +108,7 @@ int main(int argc, const char **argv) {
            strcmp(buffer, "bababa-bababa-8ABABA") == 0 ? "ok" : "fail");
 
     write_standard_password(buffer, 19, 3);
-    printf("len 19 pts 3: %s\n",
+    printf("[%s] len 19 pts 3\n",
            strcmp(buffer, "bababa-bababa-8ABAB") == 0 ? "ok" : "fail");
 
     write_standard_password(buffer, 18, 3);
