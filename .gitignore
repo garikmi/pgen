@@ -1,2 +1,3 @@
 pgen
 *.dSYM
+.DS_Store
